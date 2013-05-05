@@ -1,5 +1,9 @@
 @echo off
 
+echo Thank for color text code http://stackoverflow.com/users/1012053/dbenham
+
+
+
 :: TODO
 
 :: Find executies and settings
@@ -11,23 +15,15 @@
 setlocal EnableDelayedExpansion EnableExtensions
 
 rem Colored text engine
-for /F "tokens=1,2 delims=#" %%a in ('"prompt #$H#$E# & echo on & for %%b in (1) do rem"') do (
-  set "DEL=%%a"
-)
-
-rem Prepare a file "X" with only one dot
-<nul > X set /p ".=."
-
 rem example: call :color 0c,0a,0b,0d "text"
 
-echo.
-echo.
-call :color 9f " * San Backup Free v0.1 May'2013"
-echo.
-echo.
-echo.
-echo.
+call :initColorPrint
 
+
+echo.
+echo.
+call :color 9f " * San Backup Free v0.1 May'2013" /n
+echo.
 
 rem Init the program
 if not exist "%~dp0.\config\settings.lst" (
@@ -74,7 +70,8 @@ for /F "usebackq skip=2 eol=; tokens=1-5 delims=	" %%a in (.\config\tasks.lst) d
 		echo var5=!V5!
 		
 		if not exist !V1! (
-			echo * Source !V1! wasn't found
+			call :color 0c " * Source !V1! wasn't found"
+			echo.
 		);
 		
 		if not exist !V2! (
@@ -104,12 +101,36 @@ for /F "usebackq skip=2 eol=; tokens=1-5 delims=	" %%a in (.\config\tasks.lst) d
 		
 )
 
+call :cleanupColorPrint
+
 echo * Everything was OK
 pause > nul
 
-:color
-set "param=^%~2" !
-set "param=!param:"=\"!"
-findstr /p /A:%1 "." "!param!\..\X" nul
-<nul set /p ".=%DEL%%DEL%%DEL%%DEL%%DEL%%DEL%%DEL%"
+:color Color  Str  [/n]
+setlocal
+set "str=%~2"
+call :colorVar %1 str %3
 exit /b
+
+:colorVar  Color  StrVar  [/n]
+if not defined %~2 exit /b
+setlocal enableDelayedExpansion
+set "str=a%DEL%!%~2:\=a%DEL%\..\%DEL%%DEL%%DEL%!"
+set "str=!str:/=a%DEL%/..\%DEL%%DEL%%DEL%!"
+set "str=!str:"=\"!"
+pushd "%temp%"
+findstr /p /A:%1 "." "!str!\..\x" nul
+if /i "%~3"=="/n" echo(
+exit /b
+
+:initColorPrint
+for /F "tokens=1,2 delims=#" %%a in ('"prompt #$H#$E# & echo on & for %%b in (1) do rem"') do set "DEL=%%a"
+<nul >"%temp%\x" set /p "=%DEL%%DEL%%DEL%%DEL%%DEL%%DEL%.%DEL%"
+exit /b
+
+:cleanupColorPrint
+del "%temp%\x"
+exit /b
+
+
+
