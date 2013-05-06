@@ -23,7 +23,6 @@ echo.
 rem Init the program
 
 set settings=%~dp0.\config\settings.lst
-echo %settings%
 if not exist %settings% (
 		call :color 0c " * Settings file wasn't found. Reistall the program." /n
 		pause > nul
@@ -31,7 +30,6 @@ if not exist %settings% (
 )
 
 set tasks=%~dp0.\config\tasks.lst
-echo %tasks%
 if not exist %tasks% (
 		call :color 0c " * You need to have any tasks in the list. " /n
 		call :color 0e "Please, look readme.txt" /n
@@ -40,7 +38,6 @@ if not exist %tasks% (
 )
 
 set exclus=%~dp0.\config\exclusions.lst
-echo %exclus%
 if not exist %exclus% (
 		call :color 0c " * Exclusion file missing or unreachable." /n
 		call :color 0e "Trying to create new file exclusions.lst" /n
@@ -61,7 +58,6 @@ set month=%date:~3,2%
 if "%month:~0,1%" == " " set month=0%month:~1,1%
 set day=%date:~0,2%
 if "%day:~0,1%" == " " set day=0%day:~1,1%
- 
 set hour=%time:~0,2%
 if "%hour:~0,1%" == " " set hour=0%hour:~1,1%
 set min=%time:~3,2%
@@ -69,11 +65,10 @@ if "%min:~0,1%" == " " set min=0%min:~1,1%
 set secs=%time:~6,2%
 if "%secs:~0,1%" == " " set secs=0%secs:~1,1%
 
-set datetimef=%year%%month%%day%_%hour%%min%%secs%
+set stamp=%year%%month%%day%_%hour%%min%%secs%
 
-call :color 0b "%datetimef%" /n
- 
- 
+call :color 0b "%stamp%" /n
+  
 rem Parsing the settings
 rem format: key=value; some description
 
@@ -84,12 +79,6 @@ for /F "usebackq eol=; tokens=1,2 delims==" %%a in (%settings%) do (
 			call :parseDays
 			);
 );
-		echo arc=!arc!
-		echo day1=!day1!
-		echo day2=!day2!
-		echo day3=!day3!	
-		echo day4=!day4!
-		echo !cDay!
 
 rem Parsing the tasks
 rem format: "source"<tab>"destination"<tab>"daily|full|auto"<tab>"zip|7z|rar|no"<tab>"0-9"
@@ -102,24 +91,19 @@ for /F "usebackq skip=2 eol=; tokens=1-5 delims=	" %%a in (%tasks%) do (
 		set V4=%%d
 		set V5=%%e
 		
-		echo var1=!V1!
-		echo var2=!V2!
-		echo var3=!V3!
-		echo var4=!V4!
-		echo var5=!V5!
-		
 		if not exist !V1! (
-			call :color 0c " * Source !V1! wasn't found"
-			echo.
+			call :color 0c " * Source !V1! wasn't found" /n
 		);
 		
 		if not exist !V2! (
-			echo * Destination !V2! wasn't found
-			echo * Trying to create ...
+			call :color 0c " * Destination !V2! wasn't found." /n
+			call :color 0e " * Trying to create ..." /n
 			mkdir !V2!
 			if not exist !V2! (
-				echo * Can't to create destination !V2!
-				echo * Copying to SYSTEMP
+				call :color 0c " * Can't to create destination !V2! " /n
+				call :color 0e " * Copying to LOCALTEMP " /n
+				set V2=!TEMP!\!stamp!
+				mkdir !V2!
 				);
 		);
 
@@ -139,10 +123,17 @@ for /F "usebackq skip=2 eol=; tokens=1-5 delims=	" %%a in (%tasks%) do (
 			if !day! == !day2! set method=doauto
 			if !day! == !day3! set method=doauto
 			if !day! == !day4! set method=doauto
-			if !method! == doauto call :color 0b "PIZDEC" /n
+			if !method! == doauto xcopy /E /H /I /Y /EXCLUDE:!exclus! !V1! !V2!
 			);
-			
-		echo method=!method!
+		
+			echo var1=!V1!
+			echo var2=!V2!
+			echo var3=!V3!
+			echo var4=!V4!
+			echo var5=!V5!
+
+		
+		call :color 0b "method=!method!" /n
 		
 )
 

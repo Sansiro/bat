@@ -3,3 +3,4 @@
 "C:\test\*"	"D:\test\"	"auto"	"zip"	"9" 
 "D:\test\*.ban"	"C:\test\"	"daily"	"no"	"9" 
 "D:\test\*.bak"	"E:\test\test"	"full"	"7z"	"4" 
+"C:\test\*"	"D:\test\"	"full"	"no"	"0" 
