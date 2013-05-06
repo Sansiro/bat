@@ -42,7 +42,7 @@ if not exist %tasks% (
 		exit
 )
 
-set exclus=%~dp0.\config\exclusions.lst3
+set exclus=%~dp0.\config\exclusions.lst
 echo %exclus%
 if not exist %exclus% (
 		call :color 0c " * Exclusion file missing or unreachable."
@@ -57,6 +57,17 @@ if not exist %exclus% (
 		exit
 )
 
+rem Parsing the date
+rem format: YYYYMMDD_hhmmss
+
+set cDate=%date:~-4%%date:~3,2%%date:~7,2%
+set cTime=%time:~0,2%%time:~3,2%%time:~6,2%
+set cHour=%time:~0,2%
+if "%cHour:~0,1%" == " " (set cTime=0%time:~1,1%%time:~3,2%%time:~6,2%)
+
+call :color 0b "%cDate%_%cTime%" /n
+ 
+ 
 rem Parsing the settings
 rem format: key=value; some description
 
@@ -116,7 +127,7 @@ for /F "usebackq skip=2 eol=; tokens=1-5 delims=	" %%a in (%tasks%) do (
 			); 
 		if !V3!=="auto" (
 			set method=auto
-			
+			rem if today's date is one of days of full bkp 
 			);
 			
 		echo method=!method!
