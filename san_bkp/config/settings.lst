@@ -3,3 +3,7 @@
 ;arc=7zip,rar
 
 arc=7zip
+
+;days=03,11,19,27
+
+days=10,20

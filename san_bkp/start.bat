@@ -56,12 +56,22 @@ if not exist %exclus% (
 rem Parsing the date
 rem format: YYYYMMDD_hhmmss
 
-set cDate=%date:~-4%%date:~3,2%%date:~7,2%
-set cTime=%time:~0,2%%time:~3,2%%time:~6,2%
-set cHour=%time:~0,2%
-if "%cHour:~0,1%" == " " (set cTime=0%time:~1,1%%time:~3,2%%time:~6,2%)
+set year=%date:~-4%
+set month=%date:~3,2%
+if "%month:~0,1%" == " " set month=0%month:~1,1%
+set day=%date:~0,2%
+if "%day:~0,1%" == " " set day=0%day:~1,1%
+ 
+set hour=%time:~0,2%
+if "%hour:~0,1%" == " " set hour=0%hour:~1,1%
+set min=%time:~3,2%
+if "%min:~0,1%" == " " set min=0%min:~1,1%
+set secs=%time:~6,2%
+if "%secs:~0,1%" == " " set secs=0%secs:~1,1%
 
-call :color 0b "%cDate%_%cTime%" /n
+set datetimef=%year%%month%%day%_%hour%%min%%secs%
+
+call :color 0b "%datetimef%" /n
  
  
 rem Parsing the settings
@@ -79,6 +89,7 @@ for /F "usebackq eol=; tokens=1,2 delims==" %%a in (%settings%) do (
 		echo day2=!day2!
 		echo day3=!day3!	
 		echo day4=!day4!
+		echo !cDay!
 
 rem Parsing the tasks
 rem format: "source"<tab>"destination"<tab>"daily|full|auto"<tab>"zip|7z|rar|no"<tab>"0-9"
@@ -124,6 +135,11 @@ for /F "usebackq skip=2 eol=; tokens=1-5 delims=	" %%a in (%tasks%) do (
 		if !V3!=="auto" (
 			set method=auto
 			rem if today's date is one of days of full bkp 
+			if !day! == !day1! set method=doauto
+			if !day! == !day2! set method=doauto
+			if !day! == !day3! set method=doauto
+			if !day! == !day4! set method=doauto
+			if !method! == doauto call :color 0b "PIZDEC" /n
 			);
 			
 		echo method=!method!

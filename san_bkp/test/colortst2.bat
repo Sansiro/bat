@@ -1,43 +1,46 @@
 @echo off
+
+echo Thank for color text code http://stackoverflow.com/users/1012053/dbenham
+
 setlocal
 
 call :initColorPrint
 
-call :colorPrint 0a "a"
-call :colorPrint 0b "b"
-set "txt=^" & call :colorPrintVar 0c txt
-call :colorPrint 0d "<"
-call :colorPrint 0e ">"
-call :colorPrint 0f "&"
-call :colorPrint 1a "|"
-call :colorPrint 1b " "
-call :colorPrint 1c "%%%%"
-call :colorPrint 1d ^"""
-call :colorPrint 1e "*"
-call :colorPrint 1f "?"
-call :colorPrint 2a "!"
-call :colorPrint 2b "."
-call :colorPrint 2c ".."
-call :colorPrint 2d "/"
-call :colorPrint 2e "\"
-call :colorPrint 2f "q:" /n
+call :color 0a "a"
+call :color 0b "b"
+set "txt=^" & call :colorVar 0c txt
+call :color 0d "<"
+call :color 0e ">"
+call :color 0f "&"
+call :color 1a "|"
+call :color 1b " "
+call :color 1c "%%%%"
+call :color 1d ^"""
+call :color 1e "*"
+call :color 1f "?"
+call :color 2a "!"
+call :color 2b "."
+call :color 2c ".."
+call :color 2d "/"
+call :color 2e "\"
+call :color 2f "q:" /n
 echo(
 set complex="c:\hello world!/.\..\\a//^<%%>&|!" /^^^<%%^>^&^|!\
-call :colorPrintVar 74 complex /n
+call :colorVar 74 complex /n
 
 call :cleanupColorPrint
 
-
+pause
 
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-:colorPrint Color  Str  [/n]
+:color Color  Str  [/n]
 setlocal
 set "str=%~2"
-call :colorPrintVar %1 str %3
+call :colorVar %1 str %3
 exit /b
 
-:colorPrintVar  Color  StrVar  [/n]
+:colorVar  Color  StrVar  [/n]
 if not defined %~2 exit /b
 setlocal enableDelayedExpansion
 set "str=a%DEL%!%~2:\=a%DEL%\..\%DEL%%DEL%%DEL%!"
