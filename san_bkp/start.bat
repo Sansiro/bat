@@ -15,8 +15,7 @@ rem example: call :color 0c,0a,0b,0d "text"
 
 call :initColorPrint
 
-call :color 07 "Thank for colored text code http://stackoverflow.com/users/1012053/dbenham"
-echo.
+call :color 07 "Thank for colored text code http://stackoverflow.com/users/1012053/dbenham" /n
 echo.
 call :color 9f " * San Backup Free v0.1 May'2013" /n
 echo.
@@ -26,8 +25,7 @@ rem Init the program
 set settings=%~dp0.\config\settings.lst
 echo %settings%
 if not exist %settings% (
-		call :color 0c " * Settings file wasn't found. Reistall the program."
-		echo.
+		call :color 0c " * Settings file wasn't found. Reistall the program." /n
 		pause > nul
 		exit
 )
@@ -35,9 +33,8 @@ if not exist %settings% (
 set tasks=%~dp0.\config\tasks.lst
 echo %tasks%
 if not exist %tasks% (
-		call :color 0c " * You need to have any tasks in the list. "
-		call :color 0e "Please, look readme.txt"
-		echo.
+		call :color 0c " * You need to have any tasks in the list. " /n
+		call :color 0e "Please, look readme.txt" /n
 		pause > nul
 		exit
 )
@@ -45,14 +42,13 @@ if not exist %tasks% (
 set exclus=%~dp0.\config\exclusions.lst
 echo %exclus%
 if not exist %exclus% (
-		call :color 0c " * Exclusion file missing or unreachable."
-		call :color 0e "Trying to create new file exclusions.lst"
-		echo.
+		call :color 0c " * Exclusion file missing or unreachable." /n
+		call :color 0e "Trying to create new file exclusions.lst" /n
 		echo .lck >> "%exclus%"
 )
 
 if not exist %exclus% (
-		call :color 0c " * Can't create exclusions.lst"
+		call :color 0c " * Can't create exclusions.lst" /n
 		pause > nul
 		exit
 )
